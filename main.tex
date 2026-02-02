@@ -1,0 +1,318 @@
+\documentclass[titlepage,11pt]{jarticle}
+\usepackage{ics-thesis}
+
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{latexsym}
+\usepackage{comment}
+\usepackage{here}        % [H] placement
+\usepackage{enumerate}
+\usepackage{bm}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% Hyperref (dvipdfmx + Japanese)
+\usepackage[dvipdfmx, bookmarkstype=toc, colorlinks=false,
+  pdfborder={0 0 0}, bookmarks=true, bookmarksnumbered=true]{hyperref}
+\usepackage{pxjahyper}
+
+\usepackage[normalem]{ulem}
+\usepackage{color}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\cancel}[1]{\sout{\textcolor{blue}{#1}}}
+\newcommand{\tab}{\hspace*{3mm}}
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+
+% =========================================================
+% 以下のコマンドは説明用にあるだけです。必要に応じて削除してください。
+% =========================================================
+\newcommand{\chapterintro}[1]{%
+  \noindent\textbf{この章でやること：} #1\par\medskip
+}
+
+\newcommand{\readerGuide}[1]{%
+  \noindent\textbf{読むときのポイント}\par
+  \begin{itemize}\setlength{\itemsep}{2pt}
+    #1
+  \end{itemize}\vspace{2mm}
+}
+
+\newcommand{\chaptertakeaway}[1]{%
+  \par\medskip
+  \noindent\textbf{まとめ：} #1\par
+}
+
+% =========================================================
+% Notation (example)
+% =========================================================
+\newcommand{\call}{\mathcal{C}_{\mathrm{all}}}
+\newcommand{\lone}{\mathcal{L}_{\mathrm{one}}}
+
+% =========================================================
+% Algorithm captions in Japanese
+% =========================================================
+\makeatletter
+\renewcommand{\ALG@name}{アルゴリズム}
+\makeatother
+\algtext*{EndWhile}
+\algrenewcommand\algorithmicrequire{\textbf{Input:}}
+\algrenewcommand\algorithmicensure{\textbf{Output:}}
+
+% =========================================================
+% Theorem environments (読みやすい順に)
+% =========================================================
+\theoremstyle{definition}
+\newtheorem{dfn}{定義}
+\newtheorem{thm}{定理}
+\newtheorem{lem}{補題}
+\newtheorem{cor}{系}
+\renewcommand{\proofname}{\bf{証明}}
+
+% =========================================================
+% Page style for bachelor thesis
+% =========================================================
+\pagestyle{bachelorthesis} % 卒論はこっち
+% \pagestyle{masterthesis} % 修論はこっち
+
+% =========================================================
+% Meta
+% =========================================================
+\title{ユークリッド辺重みをもつ\\単位円盤グラフにおける\\最小全域木問題の\\分散近似アルゴリズム}
+\author{木村　涼}
+\supervisor{泉　泰介\\北村　直暉}
+\deadline{令和8年2月9日}
+
+\begin{document}
+
+\titlepage
+
+% =========================================================
+% Abstract
+% =========================================================
+\abstract{
+  \textbf{背景：} 〜〜が重要である。\\
+  \textbf{目的：} 本稿では〜〜を目指す。\\
+  \textbf{手法：} 〜〜を用いて〜〜する。\\
+  \textbf{結果：} 〜〜を達成した（/見積もった）。\\
+  \textbf{貢献：} 本研究の貢献は(1)〜〜，(2)〜〜である。
+}
+
+\keyword{
+  キーワード1，キーワード2，キーワード3
+}
+
+\toc
+\newpage
+
+% =========================================================
+\section{はじめに}
+% =========================================================
+\chapterintro{研究の「背景→課題→本稿の貢献」を短くつなぎ、読み手が全体像を掴めるようにします。}
+
+\readerGuide{
+  \item まず\textbf{何が問題で、なぜ重要か}（背景と課題）
+  \item 次に\textbf{何をどこまで解くか}（設定と到達点）
+  \item 最後に\textbf{何が新しいか}（貢献）
+}
+
+\subsection{背景}
+本文を書いてください。導入では「専門用語を最小限」にして、初見でも読めるようにします。
+引用する場合はこのように書くことが知られている\cite{hoge}。並べて書いたってかまわない\cite{fuga,puyo}。
+
+\subsection{本稿の貢献}
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item （貢献1）〜〜を提案する。
+  \item （貢献2）〜〜を理論的に示す。
+  \item （貢献3）〜〜を実装・評価する（該当する場合）。
+\end{itemize}
+
+\subsection{論文の構成}
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item 第2章：関連研究
+  \item 第3章：準備（記法・定義）
+  \item 第4章：提案手法
+  \item 第5章：評価
+  \item 第6章：まとめ
+\end{itemize}
+
+\chaptertakeaway{この章を読み終えると、「何を解く論文で、どこが新しいか」が説明できる状態になります。}
+
+% =========================================================
+\section{関連研究}
+% =========================================================
+\chapterintro{先行研究を「何ができて、どこが足りないか」に整理し、本稿の立ち位置を明確にします。}
+
+\readerGuide{
+  \item 似た問題設定の手法を\textbf{目的・仮定・計算量}で比較する
+  \item 本稿が埋めるギャップを\textbf{一言で言える}ようにする
+}
+
+
+\chaptertakeaway{「先行研究A/Bに対して本稿はここが違う」と言える状態になります。}
+
+% =========================================================
+\section{諸定義}
+% =========================================================
+\subsection{記法の定義}
+\begin{dfn}[グラフの記法の定義]
+    $G=(V,E)$を無向単純連結グラフとする．頂点数を$n=|V|$，辺数を$m=|E|$とする．任意の辺$e=(u,v)\in E$に対し，その重みを$w(u,v)$とする．
+\end{dfn}
+\begin{dfn}[幾何学的記法の定義]
+    各頂点$v\in V$はユークリッド平面上の座標$(x_v,y_v)\in \mathbb{R}^2$を持つ．2頂点$u,v$間のユークリッド距離を\[d(u,v)=\sqrt{(x_u-x_v)^2+(y_u-y_v)^2}\]と定義する．
+\end{dfn}
+
+\subsection{用語の定義}
+\begin{dfn}[CONGESTモデル]
+    CONGESTモデルは同期型の分散計算モデルである．計算はラウンド単位で進行し，各ラウンドにおいて各ノードは隣接ノードに対し$O(\log n)$ビット長のメッセージを双方向に伝送できる．各ノードは無限の局所計算能力を持つと仮定する．また，各ノードは$O(\log n)$長の自然数値によるIDが付与されており，自身の隣接ノードすべてのIDは既知であるとする．各ノードはグラフのトポロジに関する知識を持たない．
+\end{dfn}
+\begin{dfn}[ユークリッド辺重みをもつ単位円盤グラフ]
+    平面上の頂点集合$V\subset \mathbb{R}^2$に対し，任意の$u,v\in V$について，ユークリッド距離$d(u,v)\le 1$のとき辺$(u,v)$を張ったグラフを単位円盤グラフと呼ぶ．特に，各辺の重みをユークリッド距離$w(u,v)=d(u,v)$で与えたものをユークリッド辺重みをもつ単位円盤グラフと呼ぶ．
+\end{dfn}
+\begin{dfn}[最小全域木（MST）]
+    重み付き無向グラフ$G=(V,E,w)$において，全頂点を含む木のうち，辺重みの総和が最小となるものを最小全域木（Minimum Spanning Tree; MST）という．
+\end{dfn}
+\begin{dfn}[$\alpha$-近似]
+    最小化問題において，アルゴリズムが$\alpha$-近似であるとは，最適解$S^*$に対して求めた解$S$が$S^*\le S\le \alpha \cdot S^*$を満たすことをいう．
+\end{dfn}
+%\chapterintro{以降で使う記法・定義をそろえます。読者が途中で迷わないための章です。}
+
+% \subsection{記法}
+% 本文を書いてください。
+
+% \begin{dfn}[辺集合]
+%   グラフ$G$の辺集合を$E(G)$とする。
+% \end{dfn}
+% % 図・表は「何を見るか」を先に書くと親切
+% \subsection{図と表の例}
+% \noindent\textbf{見てほしい点：} 図\ref{fig:a}は「配置」、表\ref{tab:placeholder}は「数値比較」を示す例です。
+
+% \begin{figure}[htbp]
+%   \centering
+%   \includegraphics[width=0.7\linewidth]{figure/a.eps}
+%   \caption{図のキャプション（a.eps）}
+%   \label{fig:a}
+% \end{figure}
+
+% \begin{figure}[htbp]
+%   \centering
+%   \includegraphics[width=0.7\linewidth]{figure/b.png}
+%   \caption{図のキャプション（b.png）}
+%   \label{fig:b}
+% \end{figure}
+
+% \begin{table}[htbp]
+%   \centering
+%   \caption{表のキャプション（何を比べる表かを一文で）}
+%   \label{tab:placeholder}
+%   \begin{tabular}{l|c|r}
+%     項目 & 値1 & 値2 \\
+%     \hline
+%     A  & 1  & 10 \\
+%     B  & 2  & 20 \\
+%   \end{tabular}
+% \end{table}
+
+% \chaptertakeaway{ここまでで、以降の章を読むための「辞書」を揃えました。}
+
+% =========================================================
+\section{提案アルゴリズム}
+% =========================================================
+\subsection{概要}
+\subsection{具体的な動作}
+本節では，提案アルゴリズムの具体的な動作について説明する．
+\begin{algorithm}[H]
+    \caption{分散定数近似MST構築アルゴリズム}
+    \begin{algorithmic}[1]
+        \Require ユークリッド辺重みをもつ単位円盤グラフ$G=(V,E)$
+        \Ensure$G$上のMST
+        \State 独立点集合$I$を求める
+        \State $v\in I$をリーダーノードとする
+        \State $v$から距離4以下の独立点集合$B_4(v)=\{u \mid d_G(u,v) \le 4\}$を求める
+        \State $G[B_4(v)]$上でMST$T_v$を構築する
+        \While{$V_(T_v)\subset V$}
+            \State $T_v$に新しく追加された独立点に対し，距離9の独立点集合$I'$を求める
+            \For{$u\in I'$}
+                \State $B_4(u)$に誘導される部分グラフ上でMST$T_u$を構築する
+            \EndFor
+            \For{構築された部分木$T$}
+                \State 独立点を根とする根付き木に変換する
+                \For{$u\in T|u\notin T_v$}
+                    \State 親方向の辺を$T_v$に追加する
+                \EndFor
+            \EndFor
+        \EndWhile
+    \end{algorithmic}
+\end{algorithm}
+本アルゴリズムでは，まず独立点集合を求め，その中からリーダーノードとなる頂点$v$をび，それから半径4以内の局所領域においてMSTを構築する．
+次に，新たに追加された独立点の距離が9であるような独立点集合を求める．これにより，各局所計算は互いに干渉せず，分散的に実行可能となる．
+各局所MSTは，独立点を根とする根付き木へと変換され，未接続の頂点は親方向への辺を追加することで全体のMSTが拡張される．
+この操作を反復することで，最終的に全頂点を含むMSTが得られる．
+
+% \chapterintro{手法の全体像→詳細→正しさ（または理屈）の順に説明します。}
+
+% この章では以下の定理を証明する。
+% \begin{thm}
+%   $P=NP$となるのは、$P=0$または、$N=1$のときに限る。
+% \end{thm}
+
+% \subsection{全体像}
+% 本文を書いてください。ここでは「何を入力として受け取り、何を出力するか」を先に書くと読みやすいです。
+
+% \subsection{補題と証明の例}
+% \begin{lem}
+%   任意のグラフ$G$に対して，$E(G)$は有限である。
+% \end{lem}
+% \begin{proof}
+%   $G$は有限個の頂点からなると仮定する。各頂点は有限本の辺のみを持つため，
+%   辺集合$E(G)$も有限である。
+% \end{proof}
+
+% \subsection{アルゴリズムの例}
+% \begin{algorithm}[H]
+%   \caption{アルゴリズム名（何をするか）}
+%   \begin{algorithmic}[1]
+%     \Require 入力の説明
+%     \Ensure 出力の説明
+%     \State 初期化を行う
+%     \While{条件}
+%     \State 処理を行う
+%     \EndWhile
+%   \end{algorithmic}
+% \end{algorithm}
+
+% \chaptertakeaway{この章の最後で、手法を「口頭で説明」できるのが理想です。}
+
+% =========================================================
+\section{評価(実験系のテーマじゃなければ省略可)}
+% =========================================================
+\chapterintro{提案手法が「どれくらい良いか」を、比較と再現性の観点で示します。}
+
+\readerGuide{
+  \item 何と比べるか（\textbf{ベースライン}）を最初に宣言
+  \item 設定（データ/環境）を\textbf{再現できる粒度}で書く
+  \item 主要結果は\textbf{1図1メッセージ}で示す
+}
+
+\chaptertakeaway{結果だけ見ても「提案の良さ」が伝わるのがゴールです。}
+
+% =========================================================
+\section{まとめ}
+% =========================================================
+\chapterintro{本稿で得られた結論と、次にやるべき課題を短く整理します。}
+
+\subsection{まとめ}
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item 本稿では〜〜を行った。
+  \item その結果、〜〜が分かった／達成した。
+\end{itemize}
+
+\subsection{今後の課題}
+\begin{itemize}\setlength{\itemsep}{2pt}
+  \item 課題1：〜〜
+  \item 課題2：〜〜
+\end{itemize}
+
+\bibliographystyle{unsrt}
+\bibliography{biblio}
+
+\end{document}
